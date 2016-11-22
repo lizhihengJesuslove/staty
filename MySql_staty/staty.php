@@ -88,6 +88,142 @@
  *
  *select * from wth_timeattr where price regexp '^13$'		#匹配以1开始以3结尾的价格;
  *
+ *******************
+ *创建计算字段concat
+ *******************
+ *select id,concat(price,'|',times) as price_times from wth_timeattr;	#用concat连接两个字段
+ *
+ +----+----------------+
+ | id | price_times    |
+ +----+----------------+
+ |  1 | 140|12         |
+ |  2 | 130|15         |
+ |  3 | 130|10         |
+ |  4 | 140|16         |
+ |  5 | 140|17         |
+ |  6 | 130|11         |
+ |  7 | 130|12         |
+ |  8 | 140|13         |
+ |  9 | 140|14         |
+ | 10 | 130|13         |
+ | 11 | 140|14         |
+ | 12 | 130|1476529200 |
+ | 13 | 140|1476532800 |
+ | 14 | 130|1476536400 |
+ | 15 | 140|1476540000 |
+ | 16 | 130|1476543600 |
+ | 21 | 130|1478307600 |
+ +----+----------------+
+ *
+ ************************
+ *使用数据处理函数
+ ************************
+ *不赞成使用这些函数,因为使用函数会增加数据库的压力.
+ *
+ *
+ AddDate() 		增加一个日期（天、周等）
+ AddTime() 		增加一个时间（时、分等）
+ CurDate() 		返回当前日期
+ CurTime() 		返回当前时间
+ Date() 		返回日期时间的日期部分
+ DateDiff() 		计算两个日期之差
+ Date_Add() 		高度灵活的日期运算函数
+ Date_Format() 		返回一个格式化的日期或时间串
+ Day() 			返回一个日期的天数部分
+ DayOfWeek() 		对于一个日期，返回对应的星期几
+ Hour() 		返回一个时间的小时部分
+ Minute() 		返回一个时间的分钟部分
+ Month() 		返回一个日期的月份部分
+ Now() 			返回当前日期和时间
+ Second() 		返回一个时间的秒部分
+ Time() 		返回一个日期时间的时间部分
+ Year() 		返回一个日期的年份部分
+ ******************************************************
+ Abs() 			返回一个数的绝对值
+ Cos() 			返回一个角度的余弦
+ Exp() 			返回一个数的指数值
+ Mod() 			返回除操作的余数
+ Pi() 			返回圆周率
+ Rand() 		返回一个随机数
+ Sin() 			返回一个角度的正弦
+ Sqrt() 		返回一个数的平方根
+ Tan() 			返回一个角度的正切
+ *
+ *******************************************************
+ *聚集函数
+ ***************
+ *
+ AVG() 			返回某列的平均值
+ COUNT() 		返回某列的行数
+ MAX() 			返回某列的最大值
+ MIN() 			返回某列的最小值
+ SUM() 			返回某列值之和
+ *
+ *******************************************************
+ *分组数据
+ ************
+ *select * from wth_timeattr group by df_id 		#查询数据,以df_id分组,相同的为一组
+ *group by 出现在where之后,order by 之前
+ *where 在数据分组前进行过滤,having是在数组分组后进行过滤.
+ *select * from wth_timeattr where df_id>5 order by df_id having count(*)>2 order by id desc;						#查出df_id大于5的然后进行分组,分完之后比较大于2的
+ *
+ *SELECT 子句的顺序
+ * select		要返回的裂或表达式 
+ * from 		从哪个表查数据
+ * where		行级过滤
+ * group by		分组说明
+ * having		组级过滤
+ * order by 		排序
+ * limit		查几行
+ ******************
+ *mysql 子查询
+ ******************
+ *select df_id from wth_timeattr where df_id in(select id from wth_df);
+ *insert wth_t_attr (price,number,stock) select price,number,stock from wth_t_attr;				把从wth_t_attr 中的数据插入到wth_t_attr;可用于测试百万千万数据测试
+ *
+ *
+ ****************
+ *联结表
+ ****************
+ *select df_id,times,data_id from wth_df,wth_timeattr where wth_df.id=wth_timeattr.df_id 			使用where创建联结
+ *INNER JOIN 	内部联结
+ *OUTER JOIN 	外部联结	在使用OUTER JOIN时必须使用RIGHT或者LEFT关键字,如果是 LEFT OUTER JOIN 表示以左边的表为基准
+ *
+ ****************
+ *全文本索引
+ ****************
+ *select note_text from productnotes where match(note_text) against('rabbit');				#match 中是索引的字段(fulltext) against中是要搜索的内容
+ *select note_text from productnotes where note_text like '%rabbit%';					#这个是用like匹配,11w的数据,like比搜索慢0.04秒
+ *
+ *select note_text,match(note_text) against('rabbit') as rank from productnotes;			#rank会看出他的排行顺序,他会计算出一个值来排序
+ **********
+ *查询扩展*
+ **********
+ *select note_text from productnotes where match(note_text) against('rabbit' with query expansion)	#他会先查出包含rabbit的词,然后查询第二行中包含第一行的词,但是这样做会多出来你不想要的数据
+ ***************
+ *boolean值索引*
+ ***************
+ *select price from wth_t_attr where(price) against('1000' in boolean mode);				#Boolean不添加price为索引可以直接使用,但是要慢所以不推荐
+
+ *
+ *
+	 + 	含，词必须存在
+	 - 	除，词必须不出现
+	 > 	含，而且增加等级值
+	 <	包含，且减少等级值
+	 () 	词组成子表达式（允许这些子表达式作为一个组被包含 排除、排列等）
+	 ~	取消一个词的排序值
+ 	* 	尾的通配符
+ 	"" 	义一个短语（与单个词的列表不一样，它匹配整个短语以便包含或排除这个短语）
+ *
+ *全文本索引只在myisam中支持
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  */
