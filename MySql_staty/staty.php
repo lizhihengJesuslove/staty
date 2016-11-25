@@ -219,6 +219,133 @@
  *全文本索引只在myisam中支持
  *
  *
+ *****************
+ *创建和操作表   *
+ *****************
+ *建表样例
+ 	mysql> CREATE TABLE test1
+	    -> (
+	    ->  cust_id         int             NOT NULL AUTO_INCREMENT,
+	    ->  cust_name       char(50)        NOT NULL DEFAULT 'lizhiheng',
+	    ->  cust_address    char(50)        NULL,
+	    ->  cust_city       char(50)        NULL,
+	    ->  cust_state      char(5)         NULL,
+	    ->  cust_country    char(50)        NULL,
+	    ->  cust_contact    char(50)        NULL,
+	    ->  cust_email      char(255)       NULL,
+	    ->  PRIMARY KEY (cust_id),
+	    ->  FULLTEXT KEY (cust_name)
+	    -> )ENGINE=MyISAM CHARSET=utf8;
+ *
+ ******************
+ *插入数据样例
+ 	mysql> INSERT INTO customers1(cust_name,
+	    ->          cust_address,
+            ->          cust_city,
+	    ->          cust_state,
+            ->          cust_country)
+	    ->  VALUES(
+            ->          'Pep E.LaPew',
+	    ->          '100 Main Street',
+            ->          'Los AngeLes',
+	    ->          'CA',
+            ->          'USA'
+	    ->          ),
+            ->          (
+	    ->          'M.Martian',
+            ->          '42 GalaxyWay',
+	    ->          'New York',
+            ->          'NY',
+	    ->          'USA'
+            -> );
+ *
+ ***********************
+ *mysql 视图	
+ ***********************
+ *CREATE VIEW orderitemslist AS
+ *SELECT order_num,
+ *	 prod_id,
+ *	 quantity
+ *FROM orderitems;			#创建视图例子
+ *
+ *SELECT * FROM orderitemslist 		#使用视图,
+ *SELECT * FROM orderitemslist WHERE order_num=200005	#视图也可以过滤
+ *
+ *视图其实就是为了重复使用,也就是在之前必须创建了一个视图,从某种意义上来讲可以理解为是先查询一遍,之后直接用之前查询出来的结果.
+ *
+ ***********************
+ *mysql存储过程
+ ***********************
+ *存储过程是为以后的使用而保存的一条或多条MySQL语句的集合,其实存储过程就相当于函数
+ *
+ *delimier !		#把mysql的结束符;改为!号
+ *
+ *简单的存储过程
+ *
+ *
+ mysql> create procedure ordertotal(
+     ->  in onnumber int,
+     ->  out ototal decimal(8,2)
+     -> )
+     -> begin
+     ->  select sum(item_price*quantity)
+     ->  from orderitems
+     ->  where order_num=onnumber
+     ->  into ototal;
+     -> end!
+     Query OK, 0 rows affected (0.00 sec)
+ mysql> delimiter ;
+ mysql> call ordertotal(20005,@total);		#call为调用ordertotal,传入参数,20005,@total 为返回的值存储的参数,也就是存储的值存放在@total 中
+     Query OK, 1 row affected (0.06 sec)
+ mysql> select @total;				#查询@total 的值i
+      +--------+
+      | @total |
+      +--------+
+      | 149.87 |
+      +--------+
+OA     1 row in set (0.00 sec)
+ *
+ ************
+ *创建存储工程中,IN 代表传入的参数,OUT代表返回的参数,INTO表示把查询出的结果放到传出的参数ototal 中
+ *
+ ********************************************************
+ *	MySQL 触发器					*
+ ********************************************************
+ *CREATA TRIGGER newproduct AFTER INSERT ON test_table
+ *FOR EACH ROW SELECT NEW.name INTO @new_name;			#可用于聊天,当插入数据之后就返回输入的内容
+ *
+ ***
+ *CREATE TRIGgER test_insert AFTER INSERT ON trigger_table
+ *FOR EACH ROW SELECT NEW.name,NEW.phone INTO @newname,@newphone;										#如果插入多行,只会返回最后一行数据
+ *
+ *CREATE TRIGGER test_del BEFORE DELETE ON trigger_table
+ *FOR EACH ROW
+ *BEGIN
+ *INSERT INTO trigger_table1(name,phone) values(old.name,old,phone);
+ *这里可以写多条sql语句
+ *END!
+ *
+ *触发器只支持,INSERT,UPDATE,DELETE.
+ *每个表最多只有6种出发情况,也就是说,一个表最多有6个触发器,BEFORE和AFTER.
+ *
+ ************************
+ *mysql 事物处理	*
+ ************************
+ *mysql InnoDB 支持事物处理
+ *事物是维护数据库的完整性,要么完全执行,要么完全不执行.
+ *事物		transaction
+ *回退		rollback
+ *提交		commit
+ *保留的	savepoint
+ *
+ *START TRANSACTION			#使用事物之前必须先开启事物
+ *delete from trigger_table1 where id=7 #删除id为7的数据
+ *select * from trigger_table1		#执行这条语句会显示没有id为7的数据
+ *rollback				#当执行rollback后,所有的操作都会回到,start transaction时的状态
+ *savepoint aa				#定义一个叫aa的保留的,可以回退到这个地方
+ *rollback to aa			#回退到aa状态那.
+ *如果不回退直接commit之后,想再要回退,已经不行了,数据已经处理了.
+ *如果rollback一次之后,再次执行delete语句的话,会直接删除掉,所以无论是commit或者是rollback之后都必须重新开启事物(start transcation);
  *
  *
  *
@@ -226,4 +353,7 @@
  *
  *
  *
- */
+ *
+ *
+ *
+ *
