@@ -347,6 +347,37 @@ OA     1 row in set (0.00 sec)
  *如果不回退直接commit之后,想再要回退,已经不行了,数据已经处理了.
  *如果rollback一次之后,再次执行delete语句的话,会直接删除掉,所以无论是commit或者是rollback之后都必须重新开启事物(start transcation);
  *
+ ****************
+ *字符集	*
+ ****************
+ *
+ *show character set;		#显示所有可用的字符集
+ *show collation;		#显示所有可用的校对,可以看到字符集不只具有一种校验.
+ *
+ ****************
+ *安全管理	*
+ ****************
+ *在mysql库中有一个user表里面存放着所有的用户
+ *不要随意使用root账号
+ *应该创建一个和root具有相同功能的超级用户账号
+ *GRANT all privileges ON *.* TO lizhiheng@'localhost' IDENTFIED BY '123' WITH GRANT OPTION;				
+ 				#GRANT all privileges 给出所有的权限, 
+				#ON *.* 在任意数据库中的任意表(*代表任意),
+				#TO lizhiheng@'localhost' 代表lizhiheng这个用户,只能在本地登录,
+				#DENTFIED BY '123'代表密码是123,
+				#WTH GRANT OPTION 代表分配的lizhiheng用户可以把他的权限分给别的用户
+
+ ****************
+ *另一种创建方法*
+ ****************
+ *CREATE USER 李志恒 IDENTIFIED BY '111';	创建一个用户李志恒,密码为111
+ *
+ *GRANT select,insert,update ON mysql_bzbh.* TO 李志恒
+ *
+ *show GRANTS FOR lizhiheng 		#查看用户的所有权限
+ *
+ *REVOKE select,insert,update ON mysql_bzbh.* FROM 李志恒	#撤销用户的所有权限
+ *
  *
  *
  *
