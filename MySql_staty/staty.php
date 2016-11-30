@@ -360,7 +360,7 @@ OA     1 row in set (0.00 sec)
  *在mysql库中有一个user表里面存放着所有的用户
  *不要随意使用root账号
  *应该创建一个和root具有相同功能的超级用户账号
- *GRANT all privileges ON *.* TO lizhiheng@'localhost' IDENTFIED BY '123' WITH GRANT OPTION;				
+ *GRANT all privileges ON *.* TO lizhiheng@'localhost' IDENTIFIED BY '123' WITH GRANT OPTION;				
  				#GRANT all privileges 给出所有的权限, 
 				#ON *.* 在任意数据库中的任意表(*代表任意),
 				#TO lizhiheng@'localhost' 代表lizhiheng这个用户,只能在本地登录,
@@ -376,12 +376,102 @@ OA     1 row in set (0.00 sec)
  *
  *show GRANTS FOR lizhiheng 		#查看用户的所有权限
  *
- *REVOKE select,insert,update ON mysql_bzbh.* FROM 李志恒	#撤销用户的所有权限
+ *REVOKE select,insert,update ON mysql_bzbh.* FROM 李志恒@'%'	#撤销用户的所有权限
+ *
+ ****************
+ *删除用户	*
+ ****************
+ *drop user lizhiheng			#删除一个用户
+ *
+ ****************
+ *更改用户密码	*
+ ****************
+ *
+ *set PASSWORD FOR lizhiheng=Password('123');		#把密码改为123
+ *set PASSWORD = Password('111')			#如果当前用户是登录状态,可以这样修改
+ *
+ ***************
+ *撤销用户时切忌加上在哪台主机上可以访问
+ *
+ *************************
+ *所有权限		 *
+ *************************
+ *
+ ALL 			除GRANT OPTION外的所有权限
+ ALTER 			使用ALTER TABLE
+ ALTER ROUTINE 		使用ALTER PROCEDURE和DROP PROCEDURE
+ CREATE 		使用CREATE TABLE
+ CREATE ROUTINE 	使用CREATE PROCEDURE
+ CREATE TEMPORARY
+ TABLES	
+			使用CREATE TEMPORARY TABLE
+ CREATE USER 		使用CREATE USER、DROP USER、RENAME USER和REVOKE ALL PRIVILEGES
+ CREATE VIEW 		使用CREATE VIEW
+ DELETE 		使用DELETE
+ DROP 			使用DROP TABLE
+ EXECUTE 		使用CALL和存储过程
+ FILE 			使用SELECT INTO OUTFILE和LOAD DATA INFILE
+ GRANT OPTION 		使用GRANT和REVOKE
+ INDEX 			使用CREATE INDEX和DROP INDEX
+ INSERT 		使用INSERT
+ LOCK TABLES 		使用LOCK TABLES
+ PROCESS 		使用SHOW FULL PROCESSLIST
+ RELOAD 		使用FLUSH
+ REPLICATION CLIENT 	服务器位置的访问
+ REPLICATION SLAVE 	由复制从属使用
+ SELECT 		使用SELECT
+ SHOW DATABASES 	使用SHOW DATABASES
+ SHOW VIEW 		使用SHOW CREATE VIEW
+ SHUTDOWN 		使用mysqladmin shutdown（用来关闭MySQL）
+ SUPER 			使用CHANGE MASTER、KILL、LOGS、PURGE、MASTER 和SET GLOBAL。还允许mysqladmin调试登录
+ UPDATE 		使用UPDATE
+ USAGE 			无访问权限
+ *****************************************
+ *
+ ************
+ *数据库维护*
+ ************
+ *analyze table trigger_table,test 	#检查表键是否正确
+ *
+ *check table trigger_table,test1	#对表进行检查
+ *
+ *mysqldump -uroot -p123 mysql_bzbh>F:/mysql_bzbh.sql		#导出数据库
+ *mysql -uroot -p123 mysql_bzbh<F:/mysql_bzbh.sql		#导入数据库
  *
  *
+ ****************
+ *日志文件	*
+ ****************
+ * 在windows中,在my.ini中添加
+ log="E:/www/mysql/data/mysql.log"
+ log-error="E:/www/mysql/data/mysql_log_err.log"
+ log-slow-queries="E:/www/mysql/data/mysql_log_slow.log"
+ log_slave_updates="E:/www/mysql/data/log_save_updates.log"
+ *
+ *然后重新启动mysql
+ *启动方法:使用管理员命令行,输入命令:net stop mysql		#停止mysql
+ *				     net start mysql 		#启动mysql
  *
  *
+ ****************
+ *改善mysql性能	*
+ ****************
+ *show variables;
+ *show status;
+ *show processlist		#查看当前有多少活动进程,也就是多少个账户登录mysql
+ *explain select phone from trigger_table1	#解释mysql如何执行一条select语句
+ *在导入数据时关闭西东提交
+ *索引改善数据检索的性能,但是损害数据插入删除与更新的性能.
+ *like 很慢,最好使用FULLTEXT 而不是like
  *
+ *
+ ************************
+ *mysql语句的语法	*
+ ************************
+ *增加修改删除字段
+ *alter table trigger_table add email	char(50) NOT NULL	#添加一个email字段,非空,char()类型
+ *alter table trigger_table change name user_name char(30) NOT NULL;
+ *alter table trigger_table drop email;
  *
  *
  *
