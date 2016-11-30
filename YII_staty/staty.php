@@ -1,0 +1,31 @@
+<?php
+/********************************
+ *YII学习			*
+ ********************************
+ *
+ *安装Yii
+ *github.com/settings/tokens				#可以获得token
+ *
+ *************************
+ *yii官方文档上有安装方式*
+ *************************
+ *需要先安装composer
+ *composer global require "fxp/composer-asset-plugin:~1.1.1"
+ *composer create-project --prefer-dist yiisoft/yii2-app-basic E:/www/work/MyYii
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
