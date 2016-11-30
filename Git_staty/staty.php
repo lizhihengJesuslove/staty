@@ -5,7 +5,7 @@
  * C:\Windows\System32\drivers\etc
  * http协议是超文本传输协议
  * 当在浏览器地址输入www.baidu.com敲回车之后发生了什么
- * 浏览器会先从你本地的hosts(C:\windows\system32\etc\)文件找有没有www.baidu.com的记录,如果有,直接找到IP地址,hosts文件是这样的格式如下
+ * 浏览器会先从你本地的hosts(C:/Windows/System32/drivers/etc/)文件找有没有www.baidu.com的记录,如果有,直接找到IP地址,hosts文件是这样的格式如下
  * ip地址         域名
  * 127.0.0.1      localhost
  * 找到ip地址之后直接返回IP地址浏览器去访问,如果没有就去请求dns缓存(ipconfig /displaydns),如果dns缓存没有的话,去请求网关上的(如:192.168.1.1);如果网关上的没有就去找根服务器,根服务器就是个点(.);跟服务器有.com .cn .org 这些,然后判断是.com的,那么再从.com的自服务器找baidu.com,找到之后再从baidu.com上找www.baidu.com,最后找到www.baidu.com对应的ip地址返回给用户
