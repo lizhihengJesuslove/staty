@@ -6,6 +6,8 @@
  *安装Yii
  *github.com/settings/tokens				#可以获得token
  *
+ *Yii的中文文档地址 					#www.yiichina.com
+ *
  *************************
  *yii官方文档上有安装方式*
  *************************
