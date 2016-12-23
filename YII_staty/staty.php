@@ -16,6 +16,26 @@
  *composer create-project --prefer-dist yiisoft/yii2-app-basic E:/www/work/MyYii
  *
  *
+ *************************
+ *yii操作数据库		 *
+ *************************
+ *$query = new \yii\db\Query();
+ *$query -> select('id,name')-> from('user')-> limit(10)->all();
+ *select id,name from user limit 10 	转成sql之后
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
